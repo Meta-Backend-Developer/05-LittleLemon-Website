@@ -1,7 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import BookingForm
 from .models import Menu
+
 
 
 
@@ -18,12 +20,13 @@ def book(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('book')
     context = {'form':form}
     return render(request, 'book.html', context)
 
 # Add your code here to create new views
 def menu(request):
-    menu_data = Menu.objects.all()
+    menu_data = Menu.objects.all().order_by('name')
     main_data = {'menu': menu_data}
     return render(request, 'menu.html', main_data)
 
